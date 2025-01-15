@@ -1,7 +1,6 @@
 ﻿
 class Program
 {
-    // Определение состояния в NFA
     public class State
     {
         public int Id { get; set; } = -1;
@@ -23,7 +22,6 @@ class Program
         }
     }
 
-    // Определение конечного автомата
     public class NFA
     {
         public State StartState;
@@ -52,7 +50,6 @@ class Program
             return _stateCounter;
         }
 
-        // Базовый случай: одиночный символ
         public NFA CreateSymbolNFA(char symbol)
         {
             if (symbol == 'e')
@@ -66,7 +63,6 @@ class Program
             return new NFA(start, end);
         }
 
-        // Операция конкатенации
         public NFA Concatenate(NFA first, NFA second)
         {
             first.EndState.AddTransition('ε', second.StartState);
@@ -74,7 +70,6 @@ class Program
             return new NFA(first.StartState, second.EndState);
         }
 
-        // Операция "или" (|, объединение)
         public NFA Union(NFA first, NFA second)
         {
             State start = CreateState();
@@ -89,7 +84,6 @@ class Program
             return new NFA(start, end);
         }
 
-        // Операция звезды Клини (*)
         public NFA Star(NFA nfa)
         {
             State start = CreateState();
@@ -103,7 +97,6 @@ class Program
             return new NFA(start, end);
         }
 
-        // Операция "плюс" (+, один или больше повторений)
         public NFA Plus(NFA nfa)
         {
             State start = CreateState();
@@ -203,7 +196,6 @@ class Program
             }
         }
 
-        // Преобразование переходов NFA в List<List<string>>
         public Dictionary<char, List<string>> ConvertToTransitionList(NFA nfa)
         {
             Dictionary<char, List<string>> transitionsList = new();
@@ -215,7 +207,7 @@ class Program
             }
 
             nfa.StartState.Id = _currentStateId;
-            // Обход всех состояний и их переходов
+
             TraverseState(nfa.StartState, visited, transitionsList);
 
             return transitionsList;
@@ -270,13 +262,11 @@ class Program
 
     public class RegexParser
     {
-        // Преобразование инфиксного выражения в ОПЗ
         public string ToPostfix(string regex)
         {
             Stack<char> operators = new Stack<char>();
             string postfix = "";
 
-            // Установим приоритеты операторов
             Dictionary<char, int> precedence = new Dictionary<char, int>
             {
                 { '|', 1 },
@@ -293,7 +283,6 @@ class Program
                 {
                     postfix += c;
 
-                    // Добавляем неявную конкатенацию, если нужно
                     if (i + 1 < regex.Length && (char.IsLetterOrDigit(regex[i + 1]) || regex[i + 1] == '('))
                     {
                         operators.Push('.');
@@ -309,9 +298,9 @@ class Program
                     {
                         postfix += operators.Pop();
                     }
-                    operators.Pop(); // Удаляем '(' из стека
+                    operators.Pop();
                 }
-                else // оператор: |, ., *, +
+                else
                 {
                     while (operators.Count > 0 && operators.Peek() != '(' && precedence[c] <= precedence[operators.Peek()])
                     {
