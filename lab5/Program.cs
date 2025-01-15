@@ -1,4 +1,5 @@
-﻿
+﻿using Determination;
+
 class Program
 {
     public class State
@@ -322,8 +323,9 @@ class Program
 
     static void Main(string[] args)
     {
-        string inputPath = args[1];
-        string outputPath = args[2];
+        string inputPath = args[0];
+        string outputNFA = "nfa.csv";
+        string outputPath = args[1];
 
         var lines = File.ReadLines(inputPath);
         string regex = lines.First();
@@ -333,7 +335,7 @@ class Program
 
         Dictionary<char, List<string>> transitionsList = constructor.ConvertToTransitionList(nfa);
 
-        using (var writer = new StreamWriter(outputPath))
+        using (var writer = new StreamWriter(outputNFA))
         {
             for (int i = 0; i < constructor.GetStateCount(); i++)
             {
@@ -366,5 +368,8 @@ class Program
                 writer.WriteLine();
             }
         }
+
+        Determination.Determination determination = new();
+        determination.Process(outputNFA, outputPath);
     }
 }

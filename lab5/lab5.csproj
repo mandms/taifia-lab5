@@ -7,4 +7,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Reference Include="Determination">
+      <HintPath>..\..\lab4\Determination\bin\Debug\net8.0\Determination.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
